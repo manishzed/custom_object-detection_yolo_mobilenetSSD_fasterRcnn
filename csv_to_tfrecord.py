@@ -12,8 +12,9 @@ from __future__ import absolute_import
 
 import os
 import io
+import sys
 import pandas as pd
-import tensorflow.compat.v1 as tf
+import tensorflow as tf
 
 from PIL import Image
 from object_detection.utils import dataset_util
@@ -39,7 +40,6 @@ def class_text_to_int(row_label):
     else:
       None
 
-
 def split(df, group):
     data = namedtuple('data', ['filename', 'object'])
     gb = df.groupby(group)
@@ -51,9 +51,11 @@ def create_tf_example(group, path):
         encoded_jpg = fid.read()
     encoded_jpg_io = io.BytesIO(encoded_jpg)
     image = Image.open(encoded_jpg_io)
+
     width, height = image.size
 
     filename = group.filename.encode('utf8')
+    print(filename)
     image_format = b'jpg'
     xmins = []
     xmaxs = []
@@ -92,11 +94,25 @@ def main(_):
     path = os.path.join(FLAGS.image_dir)
     examples = pd.read_csv(FLAGS.csv_input)
     grouped = split(examples, 'filename')
+
+    # added
+    file_errors = 0
+
     for group in grouped:
-        tf_example = create_tf_example(group, path)
-        writer.write(tf_example.SerializeToString())
+        try:
+            tf_example = create_tf_example(group, path)
+            writer.write(tf_example.SerializeToString())
+        except:
+
+            # added
+            file_errors +=1
+            pass
 
     writer.close()
+
+    # added
+    print("FINISHED. There were %d errors" %file_errors)
+
     output_path = os.path.join(os.getcwd(), FLAGS.output_path)
     print('Successfully created the TFRecords: {}'.format(output_path))
 
