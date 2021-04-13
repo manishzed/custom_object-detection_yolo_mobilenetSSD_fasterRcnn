@@ -1,8 +1,10 @@
 """
 Usage:
-  # From the data set dir
+  # From tensorflow/models/
   # Create train data:
-  python ../generate_tfrecord.py --csv_input=data/train_labels.csv  --output_path=train.record
+  python generate_tfrecord.py --csv_input=data/train_labels.csv  --output_path=train.record
+  # Create test data:
+  python generate_tfrecord.py --csv_input=data/test_labels.csv  --output_path=test.record
 """
 from __future__ import division
 from __future__ import print_function
@@ -11,7 +13,7 @@ from __future__ import absolute_import
 import os
 import io
 import pandas as pd
-import tensorflow.compat.v1 as tf
+import tensorflow as tf
 
 from PIL import Image
 from object_detection.utils import dataset_util
@@ -20,6 +22,7 @@ from collections import namedtuple, OrderedDict
 flags = tf.app.flags
 flags.DEFINE_string('csv_input', '', 'Path to the CSV input')
 flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
+flags.DEFINE_string('image_dir', '', 'Path to images')
 FLAGS = flags.FLAGS
 
 
@@ -34,7 +37,7 @@ def class_text_to_int(row_label):
     elif row_label == 'Person':
         return 4
     else:
-        0
+        None
 
 
 def split(df, group):
@@ -51,7 +54,6 @@ def create_tf_example(group, path):
     width, height = image.size
 
     filename = group.filename.encode('utf8')
-
     image_format = b'jpg'
     xmins = []
     xmaxs = []
@@ -87,7 +89,7 @@ def create_tf_example(group, path):
 
 def main(_):
     writer = tf.python_io.TFRecordWriter(FLAGS.output_path)
-    path = os.path.join(os.getcwd())
+    path = os.path.join(FLAGS.image_dir)
     examples = pd.read_csv(FLAGS.csv_input)
     grouped = split(examples, 'filename')
     for group in grouped:
