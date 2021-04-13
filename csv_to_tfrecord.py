@@ -31,7 +31,7 @@ def class_text_to_int(row_label):
         return 2
     elif row_label == 'Sheep':
         return 3
-    elif row_label == 'Sheep':
+    elif row_label == 'Person':
         return 4
     else:
         0
