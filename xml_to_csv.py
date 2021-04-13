@@ -1,7 +1,6 @@
 
 """
-Go to the csv folder
- Operation mode: command line python xml2csv.py -i indir (picture and marked parent directory)
+Operation mode: command line python xml2csv.py -i indir (picture and marked parent directory)
              Note: Required parameters: -i specifies the parent folder that contains pictures and annotations. Pictures and annotations may not be in the same subdirectory, but the names must correspond to each other
                                            (The picture format defaults to .jpg, if it is another format, you can modify the comments in the code yourself)
                      Optional parameters: -p split ratio of cross-validation set, default 0.05
