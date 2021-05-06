@@ -1,2 +1,3 @@
 # object-detection
-This repo includes the implemetation of some of the state of the art object detectors on subsets of some of the most popular public datasets for object detection.
+This repo includes the implemetation of some of the state of the art object detection techniques such as faster-rcnn, mask-rcnn, ssd, yolo v3 and retinanet on subsets of some of the most popular public datasets for object detection task. 
+On Datasets folder, you can find notebooks with which you can get specific number of specific classes from OpenImagesV6, Coco, PascalVoc and ImageNet datasets. You can use these subsets to any of the notebooks that implement the above techniques, with only few changes to the appropriate input format, especially to annotation files, e.g. from xml to txt or to csv, or csv to tfrecord, etc. Find more details to notebooks. 
